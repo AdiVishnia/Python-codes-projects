@@ -1,25 +1,24 @@
-class Calculator:
-    def __init__(self, value):
-        self.value = value
+import sys
 
-    def __add__(self, other):
-        return Calculator(self.value + other.value)
-
-    def __sub__(self, other):
-        return Calculator(self.value - other.value)
-
-def mystery_function(a, b):
-    addition_result = a + b
-    subtraction_result = a - b
-    return addition_result, subtraction_result
-
-# Create instances of the Calculator class
-x = Calculator(10)
-y = Calculator(5)
-
-# Use the mystery function with Calculator instances
-add_result, sub_result = mystery_function(x, y)
-
-# Print the results
-print("Addition Result:", add_result.value)        # Output: Addition Result: 15
-print("Subtraction Result:", sub_result.value)     # Output: Subtraction Result: 5
+try:
+    N=int(sys.argv[1]) #input N from user by using sys.argv
+except:
+    print("Invalid input, index 1 must be int!")
+words_dict={} #creating empty dictionary
+# opening the text file
+with open('text.txt','r') as file:
+    # reading each line    
+    for line in file:
+        # reading each word        
+        for word in line.split():
+            # counting each word 
+            # by creating key : value for every word in dictionary          
+            if word in words_dict:
+                words_dict[word]+=1
+            else:
+                words_dict[word]=1
+#sorted list- most common words to least common words 
+sorted_words_list=list(sorted(words_dict.items(), key=lambda item: item[1], reverse=True))
+#Printing top N most common words
+for i in range(N):
+    print(str(i+1)+" - word: '"+str(sorted_words_list[i][0])+"' "+str(sorted_words_list[i][1])+" times")

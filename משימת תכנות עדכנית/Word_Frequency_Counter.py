@@ -16,7 +16,7 @@ with open('text.txt','r') as file:
             if word in words_dict:
                 words_dict[word]+=1
             else:
-                words_dict[word]=0
+                words_dict[word]=1
 #sorted list- most common words to least common words 
 sorted_words_list=list(sorted(words_dict.items(), key=lambda item: item[1], reverse=True))
 #Printing top N most common words
