@@ -14,7 +14,7 @@ def apply_twos_complement(binary, bit_width):
     negative_binary = decimal_to_binary(inverted_decimal, bit_width)
     return negative_binary
 
-# Main program
+# Main program     
 decimal = int(input("Enter a decimal number: "))
 
 binary = decimal_to_binary(decimal, 8)
