@@ -18,7 +18,7 @@ with open('text.txt','r') as file:
             else:
                 words_dict[word]=1
 #sorted list- most common words to least common words 
-sorted_words_list=list(sorted(words_dict.items(), key=lambda item: item[1], reverse=True))
+sorted_words_list=sorted(words_dict.items(), key=lambda item: item[1], reverse=True)
 #Printing top N most common words
 for i in range(N):
     print(str(i+1)+" - word: '"+str(sorted_words_list[i][0])+"' "+str(sorted_words_list[i][1])+" times")
