@@ -1,5 +1,4 @@
 import socket
-import os
 def recive_one_file():
     try:
         server_socket= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,7 +15,9 @@ def recive_one_file():
             if not data:
                 break
             file_data += data
-
+        file_data = file_data.decode("utf-8").strip()
+        print(f"The file data for file {file_name} \n {file_data}")
+        client_socket.send(("File data received successfully.\n").encode("utf-8")) 
     except Exception as e:
         print("Error occured while setting up the server:",str(e))
         return None
@@ -25,8 +26,10 @@ def recive_one_file():
             client_socket.close()
         except Exception:
             pass
+        server_socket.close()
 
 if __name__ =="__main__":
     host="127.0.0.1"
     port=12345
     save_dir = r"D:\python codes\Project Server-Client"
+    recive_one_file()
