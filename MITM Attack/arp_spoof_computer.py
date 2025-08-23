@@ -5,10 +5,10 @@ import time
 init(autoreset=True)  # Initialize colorama for colored output
 
 def GetMacFromIP(ip):
-        # Sends an ARP request to retrieve the MAC address of the specified IP
+    # Sends an ARP request to retrieve the MAC address of the specified IP
     arp_request = scapy.ARP(pdst=ip)
-    broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
-    arp_request_broadcast = broadcast / arp_request
+    mac = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
+    arp_request_broadcast = mac / arp_request
     answered, unanswered = scapy.srp(arp_request_broadcast, timeout=2, verbose=False)
 
     if answered:
