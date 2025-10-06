@@ -4,7 +4,7 @@ import time
 import tkinter as tk
 from tkinter import filedialog
 
-virus_total_api_key = "83cc1cd8ee63132bfe2ed2a07edaa3d30ff4a42d7c29f109c61b1649402cc173"
+virus_total_api_key = "Your Virus Total API Key"
 
 def iterate_files(folder_path):
     for filename in os.listdir(folder_path):

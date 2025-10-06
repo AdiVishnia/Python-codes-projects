@@ -1,12 +1,14 @@
 import sys
-
+# This program counts the frequency of each word in a text file and prints the top N most common words.
+# to run the program, use command line argument to input N value
+# Example: python -u "d:\python codes\Word_Frequency_Counter.py" 10
 try:
     N=int(sys.argv[1]) #input N from user by using sys.argv
 except:
     print("Invalid input, index 1 must be int!")
 words_dict={} #creating empty dictionary
-# opening the text file
-with open('text.txt','r') as file:
+text_file_path='D:\python codes\Word_Frequency_text.txt'
+with open(text_file_path,'r') as file:
     # reading each line    
     for line in file:
         # reading each word        

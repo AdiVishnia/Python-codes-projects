@@ -1,0 +1,14 @@
+
+{
+    "dictionary": {
+        "email": "someone@amazon.com",
+        "password": "123456"
+    },
+    "fullname": {
+        "name": "Adi",
+        "surname": "Vishnia"
+    },
+    "id": "123456789",
+    "age":4444444444444444444,
+    "nickname":"anonymous"
+}

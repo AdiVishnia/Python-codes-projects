@@ -5,7 +5,7 @@ def send_file():
         client_socket= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect((host, port))
         #send file name
-        client_socket.send(("text.txt"+ "\n").encode("utf-8"))
+        client_socket.send(("payload.txt"+ "\n").encode("utf-8"))
         #send file data
         with open(file_name, 'rb') as file:
             while True:
@@ -27,5 +27,5 @@ def send_file():
 if __name__ =="__main__":
     host="127.0.0.1"
     port=12345
-    file_name= r"D:\python codes\Project Server-Client\text.txt"
+    file_name= r"D:\python codes\python-network-projects\Server_Client Project\payload.txt"
     send_file()

@@ -1,1 +1,0 @@
-hex_digest = md5_hash.hexdigest()

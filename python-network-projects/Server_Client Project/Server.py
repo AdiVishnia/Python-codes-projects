@@ -10,7 +10,7 @@ def recive_one_file():
         file_name= client_socket.recv(1024).decode("utf-8").strip()
         print(f"Receiving file: {file_name}")
         file_data = b""
-        while True:
+        while True: 
             data = client_socket.recv(1024)
             if not data:
                 break
