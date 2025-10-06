@@ -27,5 +27,5 @@ def send_file():
 if __name__ =="__main__":
     host="127.0.0.1"
     port=12345
-    file_name= r"D:\python codes\python-network-projects\Server_Client Project\payload.txt"
+    file_name= r"D:\Python-codes-projects\python-network-projects\Server_Client Project\payload.txt"
     send_file()

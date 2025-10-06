@@ -7,7 +7,7 @@ try:
 except:
     print("Invalid input, index 1 must be int!")
 words_dict={} #creating empty dictionary
-text_file_path='D:\python codes\Word_Frequency_text.txt'
+text_file_path='D:\Python-codes-projects\python-playground\exercises\sys exercise\Word_Frequency_text.txt'
 with open(text_file_path,'r') as file:
     # reading each line    
     for line in file:
