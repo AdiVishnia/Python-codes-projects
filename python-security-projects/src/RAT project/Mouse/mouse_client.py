@@ -2,7 +2,7 @@ import win32api, win32con
 import socket
 
 host = '192.168.1.167'  # server IP address
-port = 12346 #different port than keyboard server
+port = 12346 #different port than keyboard server and screen server
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((host, port))

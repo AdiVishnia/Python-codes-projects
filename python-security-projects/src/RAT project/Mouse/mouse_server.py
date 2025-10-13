@@ -2,12 +2,12 @@ import socket
 from pynput.mouse import Listener, Button
 
 host = '0.0.0.0' # listen on all interfaces
-port = 12346 #different port than keyboard server
+port = 12346 #different port than keyboard server and screen server
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind((host, port))
 server_socket.listen(1)
-print(f"Server is listening on {host}:{port}")
+print(f"TCP Server is listening on {host}:{port} for mouse capture")
 
 client_socket, client_address = server_socket.accept()
 print(f"Connection established with {client_address}")
