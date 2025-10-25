@@ -68,6 +68,6 @@ try:
             pass
         payload = encode_udp_jpeg(screenshot)
         client_socket.sendto(payload, (host, port))
-        time.sleep(0.1)
+        time.sleep(1/60)  # 60 FPS
 finally:
     client_socket.close()

@@ -25,7 +25,7 @@ latest_frame = { 'imgtk': None }
 def refresh():
     if latest_frame['imgtk'] is not None:
         label.config(image=latest_frame['imgtk'])
-    root.after(30, refresh)
+    root.after(16, refresh)  # 60 FPS
 def receive_once():
     try:
         data, addr = server_socket.recvfrom(BUFFER_SIZE)
@@ -34,7 +34,7 @@ def receive_once():
     except Exception:
         pass
     finally:
-        root.after(10, receive_once)
+        root.after(16, receive_once)  # 60 FPS
 
 # Start receiving (blocking) and the GUI loop
 root.after(0, refresh)
