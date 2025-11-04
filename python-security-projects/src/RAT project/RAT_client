@@ -1,0 +1,204 @@
+import threading
+import socket
+
+
+def run_keyboard_client():
+    # Copied from Keyboard/keyboard_client.py
+    from pynput.keyboard import Controller, Key
+
+    host = '192.168.1.167'  # server IP address
+    port = 12345
+
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        client_socket.connect((host, port))
+        print(f"Connected to server at {host}:{port} for keyboard")
+
+        keyboard = Controller()
+
+        while True:
+            try:
+                data = client_socket.recv(1024)
+                if not data:
+                    break
+
+                text = data.decode('utf-8', errors='ignore')
+
+                if text.startswith("Key."):
+                    try:
+                        key = getattr(Key, text.split('.')[1])
+                        keyboard.press(key)
+                        keyboard.release(key)
+                    except AttributeError:
+                        print(f"Unknown key: {text}")
+                else:
+                    keyboard.type(text)
+
+            except Exception as e:
+                print("Keyboard client error:", e)
+                break
+    finally:
+        try:
+            client_socket.close()
+        except Exception:
+            pass
+
+
+def run_mouse_client():
+    # Copied from Mouse/mouse_client.py
+    import win32api
+    import win32con
+
+    host = '192.168.1.167'  # server IP address
+    port = 12346  # different port than keyboard server and screen server
+
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        client_socket.connect((host, port))
+        print(f"Connected to server at {host}:{port} for mouse")
+
+        while True:
+            try:
+                data = client_socket.recv(1024)
+                if not data:
+                    break
+
+                command = data.decode('utf-8', errors='ignore')
+                parts = command.split(',')
+                action = parts[0]
+
+                if action == "move":
+                    x = int(parts[1].replace("move", ""))
+                    y = int(parts[2].replace("move", ""))
+                    win32api.SetCursorPos((x, y))
+
+                if action == "press":
+                    button = parts[1]  # left or right
+                    if button == "left":
+                        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+                    elif button == "right":
+                        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0)
+
+                if action == "release":
+                    button = parts[1]  # left or right
+                    if button == "left":
+                        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
+                    elif button == "right":
+                        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0)
+
+                if action == "scroll":
+                    dy = int(parts[1].replace("scroll", ""))
+                    win32api.mouse_event(win32con.MOUSEEVENTF_WHEEL, 0, 0, dy * 120)
+
+            except Exception as e:
+                print("Mouse client error:", e)
+                break
+    finally:
+        try:
+            client_socket.close()
+        except Exception:
+            pass
+
+
+def run_screen_client():
+    # Copied from Screen/screen_client.py
+    from PIL import ImageGrab, Image, ImageDraw
+    import time
+    from io import BytesIO
+    import ctypes
+
+    host = '192.168.1.167'  # server IP address
+    port = 12347
+
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    MAX_DATAGRAM_BYTES = 65000
+
+    def encode_udp_jpeg(image, max_bytes=MAX_DATAGRAM_BYTES):
+        quality = 60
+        scale = 1.0
+        attempts = 0
+        while True:
+            frame = image
+            if scale < 0.999:
+                w, h = image.size
+                new_w = max(1, int(w * scale))
+                new_h = max(1, int(h * scale))
+                frame = image.resize((new_w, new_h), Image.LANCZOS)
+
+            buf = BytesIO()
+            frame.save(buf, format='JPEG', quality=quality, optimize=True)
+            data = buf.getvalue()
+            if len(data) <= max_bytes:
+                return data
+
+            attempts += 1
+            if attempts > 10:
+                # Failsafe: aggressive downscale and low quality
+                w, h = image.size
+                frame = image.resize((max(1, w // 3), max(1, h // 3)), Image.LANCZOS)
+                buf = BytesIO()
+                frame.save(buf, format='JPEG', quality=30, optimize=True)
+                return buf.getvalue()
+
+            if quality > 30:
+                quality -= 5
+            else:
+                scale *= 0.8
+
+    # Added mouse pointer
+    class POINT(ctypes.Structure):
+        _fields_ = [("x", ctypes.c_long), ("y", ctypes.c_long)]
+
+    def get_cursor_position():
+        pt = POINT()
+        ctypes.windll.user32.GetCursorPos(ctypes.byref(pt))
+        return pt.x, pt.y
+
+    try:
+        print(f"Connected to server at {host}:{port} for screen")
+        while True:
+            screenshot = ImageGrab.grab().convert('RGB')
+            try:
+                x, y = get_cursor_position()
+                draw = ImageDraw.Draw(screenshot)
+                r_outer = 8
+                r_inner = 5
+                # White outer ring for visibility
+                draw.ellipse((x - r_outer, y - r_outer, x + r_outer, y + r_outer), outline='white', width=3)
+                # Red inner dot
+                draw.ellipse((x - r_inner, y - r_inner, x + r_inner, y + r_inner), fill='red')
+            except Exception:
+                pass
+            payload = encode_udp_jpeg(screenshot)
+            client_socket.sendto(payload, (host, port))
+            time.sleep(1/60)  # 60 FPS
+    finally:
+        try:
+            client_socket.close()
+        except Exception:
+            pass
+
+
+def main():
+    # Start all three clients in separate threads
+    keyboard_thread = threading.Thread(target=run_keyboard_client, name='KeyboardClient', daemon=True)
+    mouse_thread = threading.Thread(target=run_mouse_client, name='MouseClient', daemon=True)
+    screen_thread = threading.Thread(target=run_screen_client, name='ScreenClient', daemon=True)
+
+    keyboard_thread.start()
+    mouse_thread.start()
+    screen_thread.start()
+
+    # Keep the main thread alive
+    try:
+        keyboard_thread.join()
+        mouse_thread.join()
+        screen_thread.join()
+    except KeyboardInterrupt:
+        print("\nShutting down clients...")
+
+
+if __name__ == '__main__':
+    main()
+
