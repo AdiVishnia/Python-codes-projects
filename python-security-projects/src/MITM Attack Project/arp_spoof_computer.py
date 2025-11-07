@@ -34,7 +34,7 @@ def catch_packets(target_ip,spoofed_ip):
         filter=f"host {target_ip} and host {spoofed_ip}",
         store=False,
         count=5,
-        prn=lambda pkt: print(pkt.summary())
+        prn=lambda pkt: print(pkt.summary())  # NOTE: This is where intercepted packets are printed
     )
 
 

