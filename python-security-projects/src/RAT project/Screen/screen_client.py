@@ -1,15 +1,15 @@
 import socket
 from PIL import ImageGrab, Image, ImageDraw
 import time
-from io import BytesIO
-import ctypes
+from io import BytesIO 
+import ctypes # For mouse pointer position
 
 host = '192.168.1.167'  # server IP address
 port = 12347
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-MAX_DATAGRAM_BYTES = 65000
+MAX_DATAGRAM_BYTES = 65000 # Safe UDP packet size
 
 def encode_udp_jpeg(image, max_bytes=MAX_DATAGRAM_BYTES):
     quality = 60
@@ -54,10 +54,10 @@ def get_cursor_position():
 
 try:
     while True:
-        screenshot = ImageGrab.grab().convert('RGB')
+        screenshot = ImageGrab.grab().convert('RGB') # Screenshot capture with colors (RGB)  
         try:
             x, y = get_cursor_position()
-            draw = ImageDraw.Draw(screenshot)
+            draw = ImageDraw.Draw(screenshot) # Draw mouse pointer  
             r_outer = 8
             r_inner = 5
             # White outer ring for visibility

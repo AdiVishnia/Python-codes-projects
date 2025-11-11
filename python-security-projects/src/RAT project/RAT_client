@@ -196,7 +196,7 @@ def main():
         mouse_thread.join()
         screen_thread.join()
     except KeyboardInterrupt:
-        print("\nShutting down clients...")
+        print("\nShutting down client...")
 
 
 if __name__ == '__main__':
