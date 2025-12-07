@@ -137,4 +137,5 @@ if __name__ == "__main__":
 
         # Restore ARP tables to normal
         restore_arp_table(router_ip, victim_ip, "ROUTER")
-        res
+        restore_arp_table(victim_ip, router_ip, "COMPUTER")
+        print(Fore.GREEN + "[+] ARP tables restored. Exiting.")
