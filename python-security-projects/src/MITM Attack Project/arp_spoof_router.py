@@ -31,7 +31,6 @@ def catch_packets(target_ip,spoofed_ip):
     # Sniffs packets and prints the source and destination IP addresses
     print(f"Sniffing IP packets from {target_ip} to {spoofed_ip}... (max 5 packets)")
     scapy.sniff(
-        filter=f"host {target_ip} and host {spoofed_ip}",
         store=False,
         count=5,
         prn=lambda pkt: print(pkt.summary())  # NOTE: This is where intercepted packets are printed
